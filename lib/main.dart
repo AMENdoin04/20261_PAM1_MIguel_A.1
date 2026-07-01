@@ -1,83 +1,164 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MeuApp());
+  runApp(const MyApp());
 }
 
-class MeuApp extends StatelessWidget {
-  const MeuApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 243, 75, 33)),
-        useMaterial3: true,
-      ),
-      home: const PaginaPrincipal(),
+      debugShowCheckedModeBanner: false, // Remove a faixa de debug
+      home: const PaginaInicial(),
     );
   }
 }
 
-class PaginaPrincipal extends StatelessWidget {
-  const PaginaPrincipal({super.key});
+class PaginaInicial extends StatelessWidget {
+  const PaginaInicial({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // 1. Barra Superior
       appBar: AppBar(
-        title: const Text('Etec Adolpho Berezim - PAM1'),
+        title: const Text('ETEC Mongaguá - PAM I'),
         backgroundColor: Colors.redAccent,
+        centerTitle: true,
+        elevation: 10,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+        ),
       ),
-      endDrawer: const Drawer(
-        child: Center(child: Text('End Drawer'),),
-      ),
+
+      // Menu Lateral Esquerdo (Navegação)
       drawer: const Drawer(
-        child: Center(child: Text('Drawer')),
+        child: Center(child: Text('Sou trabalhador')),
       ),
-      body: Center(
+
+      // Menu Lateral Direito (Configurações/Usuário)
+      endDrawer: const Drawer(
+        child: Center(child: Text('Cumpro meu trabalho sem falta')),
+      ),
+
+      // 2. Corpo do App
+// O body utiliza SingleChildScrollView para permitir a rolagem da tela caso o conteúdo ultrapasse a altura do dispositivo
+      body: SingleChildScrollView( 
+        // Adiciona um espaçamento interno de 20 pixels em todos os lados da tela
+        padding: const EdgeInsets.all(20.0),
+        
+        // A Column organiza os elementos de cima para baixo (verticalmente)
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          // Centraliza todos os widgets filhos horizontalmente dentro da coluna
+          crossAxisAlignment: CrossAxisAlignment.center, 
           children: [
-            // Imagem da Etec Adolpho Berezim
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15), // Bordas arredondadas para um visual moderno
-              child: Image.network(
-                'https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/1/2022/08/cps-logo-identidade.jpg', // Link da foto da escola
-                width: 350,
-                height: 200,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  // Caso o link falhe, mostra um ícone de erro
-                  return const Icon(Icons.school, size: 100, color: Colors.grey);
-                },
+            // 1. Foto de Perfil: Usa dois CircleAvatar sobrepostos para criar uma moldura circular
+            const CircleAvatar(
+              radius: 60, // Tamanho do círculo externo (moldura)
+              backgroundColor: Colors.redAccent, // Cor da moldura
+              child: CircleAvatar(
+                radius: 56, // Tamanho do círculo interno (imagem)
+                // Busca a imagem de perfil diretamente de uma URL externa
+                backgroundImage: NetworkImage('https://github.com/diogenesllpereira.png'), 
               ),
             ),
-            const SizedBox(height: 20), 
+            
+            // SizedBox cria um espaço vazio vertical de 15 pixels para separar a foto do nome
+            const SizedBox(height: 15),
+
+            // 2. Nome e Idade: Widgets de texto com estilização diferenciada
             const Text(
-              'Desenvolvimento com Flutter',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.blueGrey,
-                fontWeight: FontWeight.bold,
-              ),
+              'Miguel Augusto da Silva',
+              textAlign: TextAlign.center, // Centraliza o texto
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold), // Fonte maior e negrito
             ),
             const Text(
-              'Unidade Mongaguá',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              '17 anos - Itanhaém, SP',
+              style: TextStyle(fontSize: 16, color: Colors.blueGrey), // Fonte menor com cor suave
+            ),
+            const SizedBox(height: 20),
+
+            // 3. Contatos: Seção delimitada por linhas divisórias (Divider)
+            const Divider(), // Linha horizontal separadora
+            // Chamadas ao método auxiliar para construir cada linha de contato
+            _buildContactItem(Icons.email, '040709augustomiguel@gmail.com'),
+            _buildContactItem(Icons.phone, '(13) 99728-6183'),
+            _buildContactItem(Icons.web, '@mingu3l.zz'),
+            const Divider(),
+            const SizedBox(height: 20),
+
+            // 4. Resumo Profissional: Usa Align para garantir que o título fique à esquerda
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Resumo Profissional',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.redAccent),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Tenho formação tecnica em Desenvolvimento de Sistemas na Etec Adolpho Berezin, não tenho experiencia, tenho curso em desenho na casa da musica de itanhaem, sou responsável o eficiente',
+              textAlign: TextAlign.justify, // Distribui o texto uniformemente nas laterais
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 25),
+
+            // 5. Objetivo: Segue o mesmo padrão visual do resumo para manter a consistência
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Objetivo',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.redAccent),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              'Atuar como Programador Full stack em um multinacional ou em segurança de dados',
+              textAlign: TextAlign.justify,
+              // Itálico para dar ênfase ao objetivo profissional
+              style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+
+      // 3. Barra Inferior
       bottomNavigationBar: BottomNavigationBar(
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Início'),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: 'Sobre'),
+        ],
+      ),
+
+      // 4. Botão Flutuante (Ação Principal)
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Ação executada ao clicar
+          print('Botão Flutuante Pressionado!');
+        },
+        backgroundColor: Colors.redAccent,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+// Define uma função (método) que retorna um widget, usada para criar linhas de contato padronizadas
+  Widget _buildContactItem(IconData icone, String texto) {
+    return Padding(
+      // Adiciona um espaçamento (respiro) apenas na parte superior e inferior de cada linha
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        // Organiza os elementos (ícone e texto) horizontalmente
+        children: [
+          // Exibe o ícone definido no parâmetro, usando a cor principal do nosso tema
+          Icon(icone, color: Colors.redAccent, size: 20),
+          
+          // Cria um espaço fixo de 15 pixels entre o ícone e o texto para não ficarem colados
+          const SizedBox(width: 15),
+          
+          // Exibe o conteúdo textual passado por parâmetro com um tamanho de fonte legível
+          Text(texto, style: const TextStyle(fontSize: 16)),
         ],
       ),
     );
